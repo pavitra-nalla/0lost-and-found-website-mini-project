@@ -52,8 +52,7 @@ export const getItems = asyncHandler(async (req, res) => {
         .populate('user', 'name email')
         .limit(pageSize)
         .skip(pageSize * (page - 1))
-        .sort({ createdAt: -1 })
-        .lean();
+        .sort({ createdAt: -1 });
 
     return res.json({ items, page, pages: Math.ceil(count / pageSize), count });
 });
@@ -64,8 +63,7 @@ export const getItems = asyncHandler(async (req, res) => {
 export const getMyItems = asyncHandler(async (req, res) => {
     const items = await Item.find({ user: req.user._id })
         .populate('user', 'name email')
-        .sort({ createdAt: -1 })
-        .lean();
+        .sort({ createdAt: -1 });
 
     return res.json(items);
 });
@@ -75,8 +73,7 @@ export const getMyItems = asyncHandler(async (req, res) => {
 // @access  Public
 export const getItemById = asyncHandler(async (req, res) => {
     const item = await Item.findById(req.params.id)
-        .populate('user', 'name email')
-        .lean();
+        .populate('user', 'name email');
 
     if (item) {
         return res.json(item);

@@ -187,7 +187,7 @@ const Index = () => {
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {lostItems.map((item, i) => (
-              <ItemCard key={item._id || item.id} item={item} index={i} />
+              <ItemCard key={String(item?.id || item?._id || i)} item={item} index={i} />
             ))}
           </div>
         </div>
@@ -215,7 +215,7 @@ const Index = () => {
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {foundItems.map((item, i) => (
-              <ItemCard key={item._id || item.id} item={item} index={i} />
+              <ItemCard key={String(item?.id || item?._id || i)} item={item} index={i} />
             ))}
           </div>
         </div>

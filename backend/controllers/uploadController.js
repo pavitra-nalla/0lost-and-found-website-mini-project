@@ -12,8 +12,7 @@ const unlinkAsync = util.promisify(fs.unlink);
  */
 export const uploadImage = async (req, res) => {
     try {
-        console.log("\n--- [Upload API] New Request Received ---");
-        console.log("File:", req.file);
+        
         
         // 1. Edge Case: No file uploaded
         if (!req.file) {
@@ -21,9 +20,7 @@ export const uploadImage = async (req, res) => {
             return res.status(400).json({ message: "No image file provided. Please ensure the form field is named 'image'." });
         }
 
-        console.log(`[Upload API] File received successfully. Mimetype: ${req.file.mimetype}, Size: ${req.file.size} bytes`);
-        console.log(`[Upload API] File saved temporarily at: ${req.file.path}`);
-        console.log("[Upload API] Starting Cloudinary upload process...");
+        
 
         // 2. Upload to Cloudinary using physical file path (await style)
         const result = await cloudinary.uploader.upload(req.file.path, {
@@ -31,12 +28,10 @@ export const uploadImage = async (req, res) => {
             resource_type: "image",
         });
 
-        console.log("[Upload API] Cloudinary upload successful. URL:", result.secure_url);
+        
 
         // 3. Cleanup: Delete local file post-upload
-        console.log(`[Upload API] Cleaning up local file: ${req.file.path}`);
         await unlinkAsync(req.file.path);
-        console.log("[Upload API] Cleanup completed.");
 
         // 4. Return success response ALWAYS
         return res.status(200).json({
@@ -48,7 +43,7 @@ export const uploadImage = async (req, res) => {
         
         // 5. Intelligent Failure Cleanup: Delete local file on error if it persists
         if (req.file && req.file.path && fs.existsSync(req.file.path)) {
-            console.log(`[Upload API] Error cleanup: Deleting local file: ${req.file.path}`);
+            
             try {
                 await unlinkAsync(req.file.path);
             } catch (cleanupError) {

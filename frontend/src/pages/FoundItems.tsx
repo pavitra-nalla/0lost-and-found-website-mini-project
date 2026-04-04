@@ -41,7 +41,7 @@ const FoundItems = () => {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-10">
               {filteredItems.map((item, i) => (
-                <ItemCard key={item._id || item.id} item={item} index={i} />
+                <ItemCard key={String(item?.id || item?._id || i)} item={item} index={i} />
               ))}
             </div>
             {filteredItems.length === 0 && (

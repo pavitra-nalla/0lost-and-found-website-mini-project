@@ -9,13 +9,15 @@ interface ItemCardProps {
 }
 
 const ItemCard = ({ item, index = 0 }: ItemCardProps) => {
+  const safeId = String(item?.id || item?._id || '');
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.4, 0, 0.2, 1] }}
     >
-      <Link to={`/item/${item._id || item.id}`} className="block group">
+      <Link to={`/item/${safeId}`} className="block group">
         <div className="bg-card rounded-[20px] shadow-soft overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:shadow-hover hover:-translate-y-[6px] border border-aura-peach/[0.06]">
           {/* Image Container */}
           <div className="relative aspect-[4/3] overflow-hidden">
