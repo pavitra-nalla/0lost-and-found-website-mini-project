@@ -28,8 +28,8 @@ const Index = () => {
     const fetchItems = async () => {
       try {
         const [lostRes, foundRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/items?status=lost'),
-          axios.get('http://localhost:5000/api/items?status=found'),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/items?status=lost`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/items?status=found`),
         ]);
         setLostItems(lostRes.data.items.slice(0, 4));
         setFoundItems(foundRes.data.items.slice(0, 4));

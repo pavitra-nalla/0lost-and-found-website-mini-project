@@ -23,7 +23,7 @@ const ItemDetails = () => {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/items/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/items/${id}`);
         setItem(res.data);
       } catch (error) {
         console.error(error);
@@ -40,7 +40,7 @@ const ItemDetails = () => {
 
     setClaiming(true);
     try {
-      await axios.post('http://localhost:5000/api/claims', {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/claims`, {
         item: id,
         message,
       });

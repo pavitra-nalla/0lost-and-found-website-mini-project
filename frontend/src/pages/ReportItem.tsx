@@ -48,7 +48,7 @@ const ReportItem = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/upload",
+        `${import.meta.env.VITE_API_URL}/api/upload`,
         formData,
         {
           headers: {
@@ -73,7 +73,7 @@ const ReportItem = () => {
     try {
       const imageUrl = await uploadImage();
 
-      await axios.post("http://localhost:5000/api/items", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/items`, {
         ...form,
         image: imageUrl,
       });

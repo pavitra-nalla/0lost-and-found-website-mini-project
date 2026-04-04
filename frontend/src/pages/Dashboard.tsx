@@ -36,8 +36,8 @@ const Dashboard = () => {
       setLoading(true);
       try {
         const [itemsRes, claimsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/items/my'),
-          axios.get('http://localhost:5000/api/claims'),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/items/my`),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/claims`),
         ]);
         
         setItems(itemsRes.data);
@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   const handleDeleteItem = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/items/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/items/${id}`);
       setItems(items.filter((i) => i._id !== id));
       toast.success('Item deleted successfully.');
     } catch (error) {

@@ -13,7 +13,7 @@ const FoundItems = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/items?status=found');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/items?status=found`);
         setItems(res.data.items);
       } catch (error) {
         console.error(error);
