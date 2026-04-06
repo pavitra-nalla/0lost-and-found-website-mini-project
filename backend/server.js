@@ -33,29 +33,31 @@ const limiter = rateLimit({
 });
 app.use("/api/", limiter);
 
-// ✅ CORS FIX (IMPORTANT 🔥)
+// ✅ CORS (FINAL FIX 🔥)
 const allowedOrigins = [
     process.env.FRONTEND_URL, // from Render env
     "http://localhost:5173",
     "http://localhost:8080",
-    "https://lost-and-found-website-k287.vercel.app" // 👈 ADD THIS
 ].filter(Boolean);
 
-app.use(cors({
-    origin: function (origin, callback) {
-        console.log("CORS Origin:", origin); // 🔍 debug
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            console.log("CORS Origin:", origin);
 
-        if (!origin) return callback(null, true);
+            // allow requests with no origin (Postman, mobile apps)
+            if (!origin) return callback(null, true);
 
-        if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        } else {
-            console.error("❌ Blocked by CORS:", origin);
-            return callback(new Error("Not allowed by CORS"));
-        }
-    },
-    credentials: true,
-}));
+            if (allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            } else {
+                console.error("❌ Blocked by CORS:", origin);
+                return callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+    })
+);
 
 // ✅ Body parser
 app.use(express.json());
@@ -66,12 +68,12 @@ app.use(hpp());
 
 // ✅ Test routes
 app.get("/", (req, res) => {
-    res.send("Server is running");
+    res.send("Server is running 🚀");
 });
 
 app.get("/test", (req, res) => {
     console.log("🔥 TEST HIT");
-    res.send("API working");
+    res.send("API working ✅");
 });
 
 // ✅ Routes
@@ -80,7 +82,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/claims", claimRoutes);
 
-// ✅ Error handling (VERY IMPORTANT)
+// ✅ Error handling
 app.use(notFound);
 app.use(errorHandler);
 
