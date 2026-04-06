@@ -61,15 +61,34 @@ export const getUserClaims = asyncHandler(async (req, res) => {
         .skip(pageSize * (page - 1))
         .lean();
 
+    // Normalize _id to id for claims
+    const normalizeClaim = (claim) => {
+        const normalized = { ...claim, id: claim._id.toString() };
+        delete normalized._id;
+        delete normalized.__v;
+        if (normalized.item && normalized.item._id) {
+            normalized.item = { ...normalized.item, id: normalized.item._id.toString() };
+            delete normalized.item._id;
+        }
+        if (normalized.requester && normalized.requester._id) {
+            normalized.requester = { ...normalized.requester, id: normalized.requester._id.toString() };
+            delete normalized.requester._id;
+        }
+        return normalized;
+    };
+
+    const normalizedRequestsMade = requestsMade.map(normalizeClaim);
+    const normalizedRequestsReceived = requestsReceived.map(normalizeClaim);
+
     res.json({
         requestsMade: {
-            items: requestsMade,
+            items: normalizedRequestsMade,
             page,
             pages: Math.ceil(countMade / pageSize),
             count: countMade
         },
         requestsReceived: {
-            items: requestsReceived,
+            items: normalizedRequestsReceived,
             page,
             pages: Math.ceil(countReceived / pageSize),
             count: countReceived

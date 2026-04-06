@@ -56,7 +56,7 @@ const Dashboard = () => {
   const handleDeleteItem = async (id: string) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/items/${id}`);
-      setItems(items.filter((i) => i._id !== id));
+      setItems(items.filter((i) => (i._id || i.id) !== id));
       toast.success('Item deleted successfully.');
     } catch (error) {
       toast.error('Failed to delete item');
@@ -130,7 +130,7 @@ const Dashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {items.map((item, i) => (
                   <motion.div
-                    key={item._id}
+                    key={item._id || item.id || i}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: i * 0.05 }}
@@ -152,7 +152,7 @@ const Dashboard = () => {
                           <Pencil className="w-3 h-3" /> Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteItem(item._id)}
+                          onClick={() => handleDeleteItem(item._id || item.id)}
                           className="px-3 py-1.5 rounded-xl bg-destructive/10 text-destructive text-xs font-medium hover:bg-destructive/20 transition-colors flex items-center gap-1"
                         >
                           <Trash2 className="w-3 h-3" /> Delete
@@ -180,7 +180,7 @@ const Dashboard = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 {claims.map((claim, i) => (
                   <motion.div
-                    key={claim._id}
+                    key={claim._id || claim.id || i}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: i * 0.05 }}
@@ -189,7 +189,7 @@ const Dashboard = () => {
                     <img src={claim.item?.image} className="w-20 h-20 rounded-xl object-cover shrink-0" alt="Claimed item" />
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start mb-2">
-                        <Link to={`/item/${claim.item?._id}`} className="font-display font-medium text-foreground truncate hover:text-aura-lavender transition-colors">
+                        <Link to={`/item/${claim.item?._id || claim.item?.id}`} className="font-display font-medium text-foreground truncate hover:text-aura-lavender transition-colors">
                           {claim.item?.title}
                         </Link>
                         <span className={`shrink-0 px-2.5 py-1 text-xs font-medium rounded-xl capitalize ${statusStyles[claim.status] || ''}`}>
