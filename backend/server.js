@@ -1,5 +1,6 @@
 import "./config/env.js";
 
+
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -39,8 +40,8 @@ app.use("/api/", limiter);
 
 // Core middleware
 const allowedOrigins = [
-    process.env.FRONTEND_URL, 
-    "http://localhost:5173", 
+    process.env.FRONTEND_URL,
+    "http://localhost:5173",
     "http://localhost:8080"
 ].filter(Boolean);
 
