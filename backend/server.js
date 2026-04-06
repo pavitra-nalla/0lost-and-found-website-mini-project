@@ -1,6 +1,5 @@
 import "./config/env.js";
 
-
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -16,53 +15,56 @@ import itemRoutes from "./routes/itemRoutes.js";
 import claimRoutes from "./routes/claimRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 
-// 🔥 IMPORTANT: just import config file (DON’T assign)
 import "./config/cloudinary.js";
 
 connectDB();
 
 const app = express();
 
-// Dev logging
+// ✅ Dev logging
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
 
-
-// Rate limiting
+// ✅ Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
 });
 app.use("/api/", limiter);
 
-
-
-// Core middleware
+// ✅ CORS FIX (IMPORTANT 🔥)
 const allowedOrigins = [
-    process.env.FRONTEND_URL,
+    process.env.FRONTEND_URL, // from Render env
     "http://localhost:5173",
-    "http://localhost:8080"
+    "http://localhost:8080",
+    "https://lost-and-found-website-k287.vercel.app" // 👈 ADD THIS
 ].filter(Boolean);
 
 app.use(cors({
     origin: function (origin, callback) {
-        // allow requests with no origin (like mobile apps or curl requests)
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
+        console.log("CORS Origin:", origin); // 🔍 debug
+
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
         } else {
-            callback(new Error("Not allowed by CORS"));
+            console.error("❌ Blocked by CORS:", origin);
+            return callback(new Error("Not allowed by CORS"));
         }
     },
     credentials: true,
 }));
+
+// ✅ Body parser
 app.use(express.json());
 
-// Security middleware
+// ✅ Security middleware
 app.use(helmet());
 app.use(hpp());
 
-// 🔥 TEST ROUTES FIRST
+// ✅ Test routes
 app.get("/", (req, res) => {
     res.send("Server is running");
 });
@@ -72,16 +74,17 @@ app.get("/test", (req, res) => {
     res.send("API working");
 });
 
-// Routes
+// ✅ Routes
 app.use("/api/upload", uploadRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/claims", claimRoutes);
 
-// Error middleware
+// ✅ Error handling (VERY IMPORTANT)
 app.use(notFound);
 app.use(errorHandler);
 
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
