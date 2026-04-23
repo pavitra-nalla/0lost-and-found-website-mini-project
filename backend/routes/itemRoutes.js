@@ -28,7 +28,15 @@ router.route('/my').get(protect, getMyItems);
 
 router.route('/:id')
     .get(getItemById)
-    .put(updateItem)
-    .delete(deleteItem);
+    .put(protect, [
+        body('title').optional().notEmpty().withMessage('Title cannot be empty'),
+        body('description').optional().notEmpty().withMessage('Description cannot be empty'),
+        body('category').optional().notEmpty().withMessage('Category cannot be empty'),
+        body('location').optional().notEmpty().withMessage('Location cannot be empty'),
+        body('date').optional().isISO8601().withMessage('Date must be a valid ISO8601 string'),
+        body('status').optional().isIn(['lost', 'found', 'returned']).withMessage('Status is invalid'),
+        validateRequest
+    ], updateItem)
+    .delete(protect, deleteItem);
 
 export default router;
