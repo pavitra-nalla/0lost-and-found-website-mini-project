@@ -48,7 +48,7 @@ app.use(
             // allow requests with no origin (Postman, mobile apps)
             if (!origin) return callback(null, true);
 
-            if (allowedOrigins.includes(origin)) {
+            if (allowedOrigins.includes(origin) || (origin && origin.endsWith('.vercel.app'))) {
                 return callback(null, true);
             } else {
                 console.error("❌ Blocked by CORS:", origin);
